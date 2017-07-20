@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.registry.*;
 import slimeknights.tconstruct.library.*;
 import slimeknights.tconstruct.library.materials.*;
 import slimeknights.tconstruct.library.modifiers.*;
+import slimeknights.tconstruct.library.tinkering.*;
 import slimeknights.tconstruct.library.tools.*;
 import slimeknights.tconstruct.tools.*;
 
@@ -25,25 +26,29 @@ public class ModuleTools {
 	public static ToolPart battery_cell;
 	
 	private static final List<ToolCore> tools = new ArrayList<>();
+	private static final List<IToolPart> toolParts = new ArrayList<>();
 	
 	public static void init() {
 		pipe_piece = new ToolPart(Material.VALUE_Ingot * 4);
 		pipe_piece.setUnlocalizedName("pipe_piece").setRegistryName("pipe_piece");
 		GameRegistry.register(pipe_piece);
+		TinkerRegistry.registerToolPart(pipe_piece);
 		PlusTiC.proxy.registerToolPartModel(pipe_piece);
-		TinkerRegistry.registerStencilTableCrafting(Pattern.setTagForPart(new ItemStack(TinkerTools.pattern), pipe_piece));
+		toolParts.add(pipe_piece);
 		
 		laser_medium = new ToolPart(Material.VALUE_Ingot * 3);
 		laser_medium.setUnlocalizedName("laser_medium").setRegistryName("laser_medium");
 		GameRegistry.register(laser_medium);
+		TinkerRegistry.registerToolPart(laser_medium);
 		PlusTiC.proxy.registerToolPartModel(laser_medium);
-		TinkerRegistry.registerStencilTableCrafting(Pattern.setTagForPart(new ItemStack(TinkerTools.pattern), laser_medium));
+		toolParts.add(laser_medium);
 		
 		battery_cell = new ToolPart(Material.VALUE_Ingot * 3);
 		battery_cell.setUnlocalizedName("battery_cell").setRegistryName("battery_cell");
 		GameRegistry.register(battery_cell);
+		TinkerRegistry.registerToolPart(battery_cell);
 		PlusTiC.proxy.registerToolPartModel(battery_cell);
-		TinkerRegistry.registerStencilTableCrafting(Pattern.setTagForPart(new ItemStack(TinkerTools.pattern), battery_cell));
+		toolParts.add(battery_cell);
 		
 		if (Config.laserGun) {
 			laserGun = new ToolLaserGun();
@@ -73,6 +78,16 @@ public class ModuleTools {
 			tools.add(katana);
 		}
 		
+		for (final IToolPart part: getPlusTiCToolParts()) {
+			for (final ToolCore tool: getPlusTiCTools()) {
+				for (final PartMaterialType pmt: tool.getRequiredComponents()) {
+					if (pmt.getPossibleParts().contains(part)) {
+						TinkerRegistry.registerStencilTableCrafting(Pattern.setTagForPart(new ItemStack(TinkerTools.pattern), (Item)part));
+					}
+				}
+			}
+		}
+		
 		// for added PlusTiC tools
 		// TODO add more modifier jsons
 		for (IModifier modifier: new IModifier[] { TinkerModifiers.modBeheading, TinkerModifiers.modDiamond, TinkerModifiers.modEmerald }) {
@@ -83,5 +98,9 @@ public class ModuleTools {
 	
 	public static List<ToolCore> getPlusTiCTools() {
 		return Collections.unmodifiableList(tools);
+	}
+	
+	public static List<IToolPart> getPlusTiCToolParts() {
+		return Collections.unmodifiableList(toolParts);
 	}
 }
