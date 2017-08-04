@@ -23,7 +23,7 @@ import slimeknights.tconstruct.shared.*;
 public class ModuleEnderIO {
 
 	public static void init() {
-		if (Config.enderIO && Loader.isModLoaded("EnderIO")) {
+		if (Config.enderIO && (Loader.isModLoaded("EnderIO") || Loader.isModLoaded("enderio"))) {
 			Fluid coalFluid = Utils.fluidMetal("coal", 0x111111);
 			coalFluid.setTemperature(500);
 			Utils.initFluidMetal(coalFluid);

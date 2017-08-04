@@ -8,7 +8,7 @@ import slimeknights.tconstruct.library.*;
 
 public class ModuleModifiers {
 	public static void init() {
-		if (Config.enderIO && Loader.isModLoaded("EnderIO")) {
+		if (Config.enderIO && (Loader.isModLoaded("EnderIO") || Loader.isModLoaded("enderio"))) {
 			TinkerRegistry.registerModifier(ModEndlectric.endlectric);
 			Utils.addModifierItem(ModEndlectric.endlectric, "enderio", "itemBasicCapacitor", 2);
 		}

@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 
-version = "5.2.1.1"
+version = "5.2.1.2"
 group= "landmaster.plustic" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "plustic"
 
@@ -75,6 +75,18 @@ dependencies {
 	deobfCompile "slimeknights:TConstruct:1.11.2-2.7.0.9"
 	deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.2.9"
 }
+
+import org.apache.tools.ant.filters.ReplaceTokens
+task replaceVersion(type: Copy) {
+	from 'src/meta/java'
+	into "$buildDir/__generated_src"
+	filter(ReplaceTokens, tokens: [
+		'VERSION': project.version
+	])
+}
+
+compileJava.source replaceVersion.outputs.files
+compileJava.dependsOn replaceVersion
 
 processResources {
 	exclude '**/*.xcf'
