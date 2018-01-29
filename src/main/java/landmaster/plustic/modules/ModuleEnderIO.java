@@ -11,6 +11,7 @@ import landmaster.plustic.config.*;
 import landmaster.plustic.tools.stats.*;
 import landmaster.plustic.traits.*;
 import landmaster.plustic.util.*;
+import mcjty.lib.tools.*;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
 import net.minecraft.util.text.*;
@@ -29,8 +30,8 @@ public class ModuleEnderIO {
 			Utils.initFluidMetal(coalFluid);
 			
 			TinkerRegistry.registerMelting("coal", coalFluid, 100);
-			TinkerRegistry.registerBasinCasting(new ItemStack(Blocks.COAL_BLOCK), null, coalFluid, 900);
-			TinkerRegistry.registerTableCasting(new ItemStack(Items.COAL), null, coalFluid, 100);
+			TinkerRegistry.registerBasinCasting(new ItemStack(Blocks.COAL_BLOCK), ItemStackTools.getEmptyStack(), coalFluid, 900);
+			TinkerRegistry.registerTableCasting(new ItemStack(Items.COAL), ItemStackTools.getEmptyStack(), coalFluid, 100);
 			
 			Material darkSteel = new Material("darksteel_plustic_enderio", TextFormatting.DARK_GRAY);
 			darkSteel.addTrait(Portly.portly, HEAD);
