@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import net.minecraftforge.client.settings.KeyBindingMap;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.base.Throwables;
@@ -74,6 +73,18 @@ public class JetpackPancakeHippos extends ArmorModifierTrait {
 	static {
 		MinecraftForge.EVENT_BUS.register(JetpackPancakeHippos.class);
 	}
+
+	@SideOnly(Side.CLIENT)
+	private static final class ClientOnly {
+
+		static final Map<KeyBinding, JetpackSettings> keys = new HashMap<>();
+		static {
+			keys.put(KeybindHandler.JETPACK_ENGINE_KEY, JetpackSettings.ENGINE);
+			keys.put(KeybindHandler.JETPACK_HOVER_KEY, JetpackSettings.HOVER);
+			keys.put(KeybindHandler.JETPACK_EHOVER_KEY, JetpackSettings.EHOVER);
+		}
+
+	}
 	
 	public static enum JetpackSettings {
 		ENGINE, HOVER, EHOVER;
@@ -107,14 +118,7 @@ public class JetpackPancakeHippos extends ArmorModifierTrait {
 			}
 		}
 	}
-	
-	private static final Map<KeyBinding, JetpackSettings> keys = new HashMap<>();
-	static {
-		keys.put(KeybindHandler.JETPACK_ENGINE_KEY, JetpackSettings.ENGINE);
-		keys.put(KeybindHandler.JETPACK_HOVER_KEY, JetpackSettings.HOVER);
-		keys.put(KeybindHandler.JETPACK_EHOVER_KEY, JetpackSettings.EHOVER);
-	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void onKeyInput(InputEvent.KeyInputEvent event) {
@@ -124,7 +128,7 @@ public class JetpackPancakeHippos extends ArmorModifierTrait {
 		Utils.getModifiers(chestStack).stream()
 		.filter(trait -> trait instanceof JetpackPancakeHippos)
 		.findAny().ifPresent(trait -> {
-			keys.forEach((key, setting) -> {
+			ClientOnly.keys.forEach((key, setting) -> {
 				if (key.isPressed()) {
 					boolean oldState = setting.isOff(chestStack);
 					if (tonius.simplyjetpacks.config.Config.enableStateMessages) {
